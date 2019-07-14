@@ -4,12 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
-import android.support.design.widget.Snackbar
-import android.util.Log
-import android.view.View
 import android.widget.Button
-import android.widget.ImageView
-import com.synnapps.carouselview.ImageListener
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.sbandurski.tictactoesingle.R
 import pl.sbandurski.tictactoesingle.model.CGame
@@ -38,12 +33,18 @@ class MainActivity : AppCompatActivity(), IMainContract.IView {
             main_r3_b1, main_r3_b2, main_r3_b3
         )
         game = CGame()
-        player1 = CPlayer("Player 1", "X")
-        player2 = CPlayer("Player 2", "Y")
+        player1 = CPlayer("You", "")
+        player2 = CPlayer("Enemy", "")
         setPresenter(CMainPresenter(this))
         main_iv.setOnClickListener {
             presenter.showMenu(main_cl as ConstraintLayout, showedMenu, oldLayout)
             showedMenu = !showedMenu
+        }
+        main_cv_cl_tv1.setOnClickListener {
+            presenter.initGame(buttons, player1, player2, game)
+        }
+        main_cv_cl_tv2.setOnClickListener {
+            finishAndRemoveTask()
         }
         presenter.initGame(buttons, player1, player2, game)
         buttons.forEach { button ->
@@ -58,18 +59,6 @@ class MainActivity : AppCompatActivity(), IMainContract.IView {
             }
         }
         presenter.onViewCreated()
-        main_cv_cl.pageCount = 3
-        main_cv_cl.setImageListener(imageListener)
-    }
-
-    var imageListener = object: ImageListener {
-        override fun setImageForPosition(position: Int, imageView: ImageView?) {
-            when (position) {
-                0 -> imageView?.setImageResource(R.drawable.easy)
-                1 -> imageView?.setImageResource(R.drawable.medium)
-                2 -> imageView?.setImageResource(R.drawable.hard)
-            }
-        }
     }
 
     override fun onDestroy() {

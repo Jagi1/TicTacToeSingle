@@ -92,17 +92,79 @@ class CMainPresenter(
             else -> ""
         }.apply {
             if (this != "") {
+                buttons.forEach { button ->
+                    button.isClickable = false
+                    button.isFocusable = false
+                }
                 Snackbar.make(button, this, Snackbar.LENGTH_INDEFINITE)
                     .setAction(
-                        "Reset",
-                        View.OnClickListener { initGame(buttons, player1, player2, game) })
+                        "Reset"
+                    ) { initGame(buttons, player1, player2, game) }
                     .show()
             } else if (!game.turn) {
                 val notClickedButtons: ArrayList<Button> = ArrayList()
+                val notClickedButtonsMap: HashMap<Int, Button> = HashMap()
                 buttons.forEach { button ->
-                    if (button.isClickable) notClickedButtons.add(button)
+                    if (button.isClickable) {
+                        notClickedButtons.add(button)
+                        notClickedButtonsMap[button.tag.toString().toInt()] = button
+                    }
                 }
-                onButtonClicked(notClickedButtons.random(), player1, player2, game, buttons)
+                when {
+                    // Win conditions
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 5)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 9)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(5, 9)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(3, 5)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(3, 7)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(5, 7)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 2)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 3)) && notClickedButtonsMap.containsKey(2) -> onButtonClicked(notClickedButtonsMap[2]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(2, 3)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(4, 5)) && notClickedButtonsMap.containsKey(6) -> onButtonClicked(notClickedButtonsMap[6]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(4, 6)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(5, 6)) && notClickedButtonsMap.containsKey(4) -> onButtonClicked(notClickedButtonsMap[4]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(7, 8)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(7, 9)) && notClickedButtonsMap.containsKey(8) -> onButtonClicked(notClickedButtonsMap[8]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(8, 9)) && notClickedButtonsMap.containsKey(7) -> onButtonClicked(notClickedButtonsMap[7]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 4)) && notClickedButtonsMap.containsKey(7) -> onButtonClicked(notClickedButtonsMap[7]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(1, 7)) && notClickedButtonsMap.containsKey(4) -> onButtonClicked(notClickedButtonsMap[4]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(4, 7)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(2, 5)) && notClickedButtonsMap.containsKey(8) -> onButtonClicked(notClickedButtonsMap[8]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(2, 8)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(5, 8)) && notClickedButtonsMap.containsKey(2) -> onButtonClicked(notClickedButtonsMap[2]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(3, 6)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(3, 9)) && notClickedButtonsMap.containsKey(6) -> onButtonClicked(notClickedButtonsMap[6]!!, player1, player2, game, buttons)
+                    player2.buttonsSelected.containsAll(arrayListOf(6, 9)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    // Blocking enemy win condition
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 5)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 9)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(5, 9)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(3, 5)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(3, 7)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(5, 7)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 2)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 3)) && notClickedButtonsMap.containsKey(2) -> onButtonClicked(notClickedButtonsMap[2]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(2, 3)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(4, 5)) && notClickedButtonsMap.containsKey(6) -> onButtonClicked(notClickedButtonsMap[6]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(4, 6)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(5, 6)) && notClickedButtonsMap.containsKey(4) -> onButtonClicked(notClickedButtonsMap[4]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(7, 8)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(7, 9)) && notClickedButtonsMap.containsKey(8) -> onButtonClicked(notClickedButtonsMap[8]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(8, 9)) && notClickedButtonsMap.containsKey(7) -> onButtonClicked(notClickedButtonsMap[7]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 4)) && notClickedButtonsMap.containsKey(7) -> onButtonClicked(notClickedButtonsMap[7]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(1, 7)) && notClickedButtonsMap.containsKey(4) -> onButtonClicked(notClickedButtonsMap[4]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(4, 7)) && notClickedButtonsMap.containsKey(1) -> onButtonClicked(notClickedButtonsMap[1]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(2, 5)) && notClickedButtonsMap.containsKey(8) -> onButtonClicked(notClickedButtonsMap[8]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(2, 8)) && notClickedButtonsMap.containsKey(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(5, 8)) && notClickedButtonsMap.containsKey(2) -> onButtonClicked(notClickedButtonsMap[2]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(3, 6)) && notClickedButtonsMap.containsKey(9) -> onButtonClicked(notClickedButtonsMap[9]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(3, 9)) && notClickedButtonsMap.containsKey(6) -> onButtonClicked(notClickedButtonsMap[6]!!, player1, player2, game, buttons)
+                    player1.buttonsSelected.containsAll(arrayListOf(6, 9)) && notClickedButtonsMap.containsKey(3) -> onButtonClicked(notClickedButtonsMap[3]!!, player1, player2, game, buttons)
+                    // Rest
+                    notClickedButtonsMap.contains(5) -> onButtonClicked(notClickedButtonsMap[5]!!, player1, player2, game, buttons)
+                    else -> onButtonClicked(notClickedButtons.random(), player1, player2, game, buttons)
+                }
             }
         }
     }

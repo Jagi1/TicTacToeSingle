@@ -115,16 +115,49 @@
     <android.support.v7.widget.CardView android:id="@+id/main_cv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:elevation="10pt"
+        android:backgroundTint="@color/cardview_shadow_end_color"
         app:layout_constrainedHeight="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.synnapps.carouselview.CarouselView android:id="@+id/main_cv_cl"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:autoPlay="false"/>
+            android:layout_height="match_parent">
+
+            <Button android:id="@+id/main_cv_cl_tv1"
+                android:layout_width="match_parent"
+                android:layout_height="0pt"
+                app:layout_constraintHeight_percent="0.5"
+                android:background="@color/colorWhite"
+                android:focusable="true"
+                android:text="RESET GAME"
+                android:textSize="20sp"
+                android:textColor="@color/colorAccent"
+                android:elegantTextHeight="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/main_cv_cl_tv2" />
+
+            <Button android:id="@+id/main_cv_cl_tv2"
+                android:layout_width="match_parent"
+                android:layout_height="0pt"
+                app:layout_constraintHeight_percent="0.5"
+                android:background="@color/colorWhite"
+                android:focusable="true"
+                android:text="QUIT"
+                android:textSize="20sp"
+                android:textColor="@color/colorAccent"
+                android:elegantTextHeight="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/main_cv_cl_tv1" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
 
