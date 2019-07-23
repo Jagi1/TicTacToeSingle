@@ -1,72 +1,70 @@
 package pl.sbandurski.tictactoesingle.view
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.ConstraintSet
-import android.widget.Button
-import kotlinx.android.synthetic.main.activity_main.*
+import android.transition.TransitionInflater
+import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_game.view.*
+import kotlinx.android.synthetic.main.fragment_menu.*
+import kotlinx.android.synthetic.main.fragment_menu.view.*
 import pl.sbandurski.tictactoesingle.R
-import pl.sbandurski.tictactoesingle.model.CGame
-import pl.sbandurski.tictactoesingle.model.CPlayer
 import pl.sbandurski.tictactoesingle.presenter.CMainPresenter
 import pl.sbandurski.tictactoesingle.presenter.IMainContract
 
 class MainActivity : AppCompatActivity(), IMainContract.IView {
 
-    private lateinit var presenter: IMainContract.IPresenter
-    private lateinit var player1: CPlayer
-    private lateinit var player2: CPlayer
-    private lateinit var game: CGame
-    private lateinit var buttons: ArrayList<Button>
-    private lateinit var oldLayout: ConstraintSet
-    private var showedMenu = false
+    lateinit var iPresenter: IMainContract.IPresenter
+    var difficulty = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        oldLayout = ConstraintSet()
-        oldLayout.clone(main_cl)
-        buttons = arrayListOf(
-            main_r1_b1, main_r1_b2, main_r1_b3,
-            main_r2_b1, main_r2_b2, main_r2_b3,
-            main_r3_b1, main_r3_b2, main_r3_b3
-        )
-        game = CGame()
-        player1 = CPlayer("You", "")
-        player2 = CPlayer("Enemy", "")
         setPresenter(CMainPresenter(this))
-        main_iv.setOnClickListener {
-            presenter.showMenu(main_cl as ConstraintLayout, showedMenu, oldLayout)
-            showedMenu = !showedMenu
-        }
-        main_cv_cl_tv1.setOnClickListener {
-            presenter.initGame(buttons, player1, player2, game)
-        }
-        main_cv_cl_tv2.setOnClickListener {
-            finishAndRemoveTask()
-        }
-        presenter.initGame(buttons, player1, player2, game)
-        buttons.forEach { button ->
-            button.setOnClickListener { view ->
-                presenter.onButtonClicked(
-                    view as Button,
-                    player1,
-                    player2,
-                    game,
-                    buttons
-                )
-            }
-        }
-        presenter.onViewCreated()
+        val fragment = MenuFragment.newInstance()
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragment, fragment)
+        fragmentTransaction.commit()
     }
 
     override fun onDestroy() {
-        presenter.onDestroy()
+        iPresenter.onDestroy()
         super.onDestroy()
     }
 
+    fun setFragment(fragmentType: String) {
+        when (fragmentType) {
+            "M" -> {
+                val fragment = MenuFragment.newInstance()
+                val fragmentManager = supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                fragmentTransaction.replace(R.id.fragment, fragment)
+                fragmentTransaction.commit()
+            }
+            "S" -> {
+                val fragment = SettingsFragment.newInstance()
+                val fragmentManager = supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                fragmentTransaction.replace(R.id.fragment, fragment)
+                fragmentTransaction.commit()
+            }
+            else -> {
+                val fragment = GameFragment.newInstance()
+                val fragmentManager = supportFragmentManager
+                val fragmentTransaction = fragmentManager.beginTransaction()
+                fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                fragmentTransaction.replace(R.id.fragment, fragment)
+                fragmentTransaction.addToBackStack(null)
+                fragmentTransaction.commit()
+            }
+        }
+    }
+
     override fun setPresenter(presenter: IMainContract.IPresenter) {
-        this.presenter = presenter
+        this.iPresenter = presenter
     }
 }
