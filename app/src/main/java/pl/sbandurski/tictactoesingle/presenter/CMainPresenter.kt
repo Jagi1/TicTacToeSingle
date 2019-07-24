@@ -52,12 +52,26 @@ class CMainPresenter(
                 avd.start()
             }
         }
+        game.turn = !game.turn
+        ++game.turnNr
+        buttons.forEach {
+            it.isClickable = false
+            it.isFocusable = false
+        }
         val runnable = Runnable {
             kotlin.run {
-                button.isClickable = false
-                button.isFocusable = false
-                game.turn = !game.turn
-                ++game.turnNr
+                buttons.forEach {
+                    if (player1.buttonsSelected.contains(it.tag.toString().toInt()) || player2.buttonsSelected.contains(it.tag.toString().toInt())) {
+
+                    }
+                    else if (!player1.buttonsSelected.contains(it.tag.toString().toInt())) {
+                        it.isFocusable = true
+                        it.isClickable = true
+                    } else if (!player2.buttonsSelected.contains(it.tag.toString().toInt())) {
+                        it.isFocusable = true
+                        it.isClickable = true
+                    }
+                }
                 checkGameState(view, player1, player2, game, buttons, activity)
             }
         }

@@ -10,8 +10,8 @@ android {
         applicationId "pl.sbandurski.tictactoesingle"
         minSdkVersion 26
         targetSdkVersion 28
-        versionCode 260010100
-        versionName "1.1"
+        versionCode 260010200
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
